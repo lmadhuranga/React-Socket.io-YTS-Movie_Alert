@@ -31,7 +31,6 @@ function getYts() {
     
 }
 
-setTimeout(getYts, 100);
 setInterval(getYts, 360000);
 
 app.get('/', function (req, res) {    
@@ -55,9 +54,21 @@ const server = app.listen(port,()=>{
     console.log('start server',port);
 })
 
+function initMovie(userId){
+    if (lastMovie=='none') {
+        request.get(url, (error, response, body) => {
+            let jsonObj = JSON.parse(body); 
+            io.emit(`init-${userId}`,  {latestMovies:jsonObj.data.movies})
+        }); 
+    } else {
+        io.emit(`init-${userId}`,  {latestMovies:latestMoviesObj})
+    }
+}
+
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
 io.on("connection", socket => {
     console.log('socket connected',socket.client.id);
+    initMovie(socket.client.id);
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
