@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 
-const socketUrl = '/'
+const socketUrl = 'http://localhost:3001'
 
 class MoviesList extends Component {
   constructor(props){

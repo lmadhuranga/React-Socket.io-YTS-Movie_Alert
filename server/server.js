@@ -17,12 +17,14 @@ app.use(express.static(path.join(__dirname, '/../build')));
 const request = require("request");
 const url = "https://yts.am/api/v2/list_movies.json?limit=5"; 
 let lastMovie = 'none';
+let latestMoviesObj = []
 
 function getYts() {
     request.get(url, (error, response, body) => {
         let jsonObj = JSON.parse(body);
         console.log('lastMovies',lastMovie, jsonObj.data.movies[0].title);
         if(lastMovie!=jsonObj.data.movies[0].title){
+            latestMoviesObj = jsonObj.data.movies;
             lastMovie = jsonObj.data.movies[0].title;
             io.emit('newmovies',  {latestMovies:jsonObj.data.movies})
         }
@@ -30,9 +32,7 @@ function getYts() {
     
 }
 
-setTimeout(getYts, 10000);
-setTimeout(getYts, 20000);
-setTimeout(getYts, 30000);
+setTimeout(getYts, 100);
 setInterval(getYts, 360000);
 
 app.get('/', function (req, res) {    
@@ -41,7 +41,8 @@ app.get('/', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
-    res.json({name:'fuck you'})
+    io.emit('newmovies',  {latestMovies:latestMoviesObj})
+    res.json({latestMovies:latestMoviesObj})
 })
 
 
@@ -52,6 +53,6 @@ const server = app.listen(port,()=>{
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
 io.on("connection", socket => {
-    socket.on("connection", () => console.log("Client connected"));
+    console.log('socket connected',socket.client.id);
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
