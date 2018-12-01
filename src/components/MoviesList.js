@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 
+const socketUrl = '/'
 
 class MoviesList extends Component {
   constructor(props){
@@ -10,7 +11,7 @@ class MoviesList extends Component {
   
 
   setup() {
-    const socket = socketIOClient(); 
+    const socket = socketIOClient(socketUrl); 
     socket.on('connect', () => {
       console.log('Client => Connected => Server');
       socket.on("newmovies", data => {
