@@ -40,6 +40,12 @@ app.get('/', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
+    latestMoviesObj.map((movie)=>{
+        return {
+            id:movie.id, 
+            title:movie.title
+        }
+    });
     io.emit('newmovies',  {latestMovies:latestMoviesObj})
     res.json({latestMovies:latestMoviesObj})
 })
