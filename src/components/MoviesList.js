@@ -10,13 +10,13 @@ class MoviesList extends Component {
   
 
   setup() {
-    const socket = socketIOClient('http://localhost:3000/'); 
+    const socket = socketIOClient('http://localhost:3001'); 
     socket.on('connect', () => {
       console.log("Socket Connected");
-      // socket.on("newmovies", data => {
-      //   console.log('data',data);
-      //   this.setState({movies:[...this.state.movies,data.latestMovies]});
-      // });
+      socket.on("newmovies", data => {
+        // this.setState({movies:[...this.state.movies,data.latestMovies]});
+        this.setState({ movies: data.latestMovies });
+      });
     });
     socket.on('disconnect', () => {
       socket.off("newmovie")

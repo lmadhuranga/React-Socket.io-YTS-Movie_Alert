@@ -21,7 +21,7 @@ function getYts() {
         console.log('lastMovies',lastMovie, jsonObj.data.movies[0].title);
         if(lastMovie!=jsonObj.data.movies[0].title){
             lastMovie = jsonObj.data.movies[0].title;
-            io.emit('newmovies',  {latestMovies:jsonObj.data.movies[0]})
+            io.emit('newmovies',  {latestMovies:jsonObj.data.movies})
         }
     }); 
     
@@ -36,7 +36,9 @@ app.get('/call', function (req, res) {
 })
 
 
-const server = app.listen(port)
+const server = app.listen(port,()=>{
+    console.log('start server',port);
+})
 
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
