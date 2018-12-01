@@ -17,6 +17,7 @@ const request = require("request");
 const url = "https://yts.am/api/v2/list_movies.json?limit=10"; 
 let lastMovie = 'none';
 let latestMoviesObj = []
+let liveCount = 0;
 
 function getYts() {
     request.get(url, (error, response, body) => {
@@ -25,7 +26,8 @@ function getYts() {
         if(lastMovie!=jsonObj.data.movies[0].title){
             latestMoviesObj = jsonObj.data.movies;
             lastMovie = jsonObj.data.movies[0].title;
-            io.emit('newmovies',  {latestMovies:jsonObj.data.movies})
+            io.emit('newmovies',  {latestMovies:jsonObj.data.movies});
+            updateLiveCount();
         }
     }); 
     
@@ -46,7 +48,8 @@ app.get('/test', function (req, res) {
         }
     });
     io.emit('newmovies',  { latestMovies:latestMoviesObj })
-    res.json({latestMovies:newList})
+    res.json({latestMovies:newList});
+    updateLiveCount();
 })
 
 
@@ -54,7 +57,13 @@ const server = app.listen(port,()=>{
     console.log('start server',port);
 })
 
-function initMovie(userId){
+function updateLiveCount(){
+    io.emit('liveCount',  { liveCount:liveCount })
+}
+
+function joinedNewMember(userId){
+    liveCount++;
+    updateLiveCount();
     if (lastMovie=='none') {
         request.get(url, (error, response, body) => {
             let jsonObj = JSON.parse(body); 
@@ -70,7 +79,14 @@ function initMovie(userId){
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
 io.on("connection", socket => {
-    console.log('socket connected',socket.client.id);
-    initMovie(socket.client.id);
-    socket.on("disconnect", () => console.log("Client disconnected"));
+    joinedNewMember(socket.client.id);
+    socket.on("disconnect", () => {
+        liveCount--;
+        if(liveCount<0)
+        {
+            liveCount = 0;
+        }
+        updateLiveCount();
+        console.info("Client disconnected Live -> ", liveCount)
+    });
 });
