@@ -10,9 +10,9 @@ class MoviesList extends Component {
   
 
   setup() {
-    const socket = socketIOClient('http://localhost:3001'); 
+    const socket = socketIOClient(); 
     socket.on('connect', () => {
-      console.log("Socket Connected");
+      console.log('Client => Connected => Server');
       socket.on("newmovies", data => {
         // this.setState({movies:[...this.state.movies,data.latestMovies]});
         this.setState({ movies: data.latestMovies });
