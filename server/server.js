@@ -58,6 +58,8 @@ function initMovie(userId){
     if (lastMovie=='none') {
         request.get(url, (error, response, body) => {
             let jsonObj = JSON.parse(body); 
+            latestMoviesObj = jsonObj.data.movies;
+            lastMovie = jsonObj.data.movies[0].title;
             io.emit(`init-${userId}`,  {latestMovies:jsonObj.data.movies})
         }); 
     } else {
