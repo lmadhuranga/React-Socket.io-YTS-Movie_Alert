@@ -12,7 +12,8 @@ app.use(bodyParser.json());
 
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '/../../build'))); 
+console.log('sss',path.join(__dirname, '/../build'));
+app.use(express.static(path.join(__dirname, '/../build'))); 
 
 const request = require("request");
 const url = "https://yts.am/api/v2/list_movies.json?limit=5"; 
