@@ -38,6 +38,10 @@ app.get('/', function (req, res) {
     res.sendFile(htmlPath);
 })
 
+app.get('/test', function (req, res) {
+    res.json({name:'fuck you'})
+})
+
 
 const server = app.listen(port,()=>{
     console.log('start server',port);
