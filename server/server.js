@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/../build'))); 
 const request = require("request");
-const url = "https://yts.am/api/v2/list_movies.json?limit=5"; 
+const url = "https://yts.am/api/v2/list_movies.json?limit=10"; 
 let lastMovie = 'none';
 let latestMoviesObj = []
 
@@ -45,7 +45,7 @@ app.get('/test', function (req, res) {
             title:movie.title
         }
     });
-    io.emit('newmovies',  {latestMovies:latestMoviesObj})
+    io.emit('newmovies',  { latestMovies:latestMoviesObj })
     res.json({latestMovies:newList})
 })
 
