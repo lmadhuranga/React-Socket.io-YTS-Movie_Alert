@@ -30,7 +30,9 @@ function getYts() {
     
 }
 
-setTimeout(getYts, 1550);
+setTimeout(getYts, 10000);
+setTimeout(getYts, 20000);
+setTimeout(getYts, 30000);
 setInterval(getYts, 360000);
 
 app.get('/', function (req, res) {    
