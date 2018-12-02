@@ -71,7 +71,8 @@ class MoviesList extends Component {
                 <ListItemText
                   primary={
                     <span>
-                      <a rel="noopener noreferrer" target="_blank" href={youtubUrl} >{movie.title_long}</a>&nbsp;|&nbsp;
+                      {movie.title_long}&nbsp;|&nbsp;
+                      <a rel="noopener noreferrer" target="_blank" href={youtubUrl} ><i className="material-icons">play_circle_outline</i></a>&nbsp;|&nbsp;
                       <a rel="noopener noreferrer" target="_blank" href={movie.url} >YTS Link</a>
                     </span>
                   }
