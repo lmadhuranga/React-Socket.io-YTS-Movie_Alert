@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
-console.log('process.env sss',process.env);
-let socketUrl = '/';
-if (process.env.NODE_ENV=='development'){
-  socketUrl = 'http://localhost:3001';
-}
+let socketUrl = process.env.NODE_ENV==='development'?'http://localhost:3001':'/';
 
 class MoviesList extends Component {
   constructor(props){
