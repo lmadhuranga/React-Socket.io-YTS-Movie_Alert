@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const path    = require("path");
+// require('dotenv').config();
 
+console.log('process.env.SOCKETURL:',process.env)
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
