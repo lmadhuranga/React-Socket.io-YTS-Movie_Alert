@@ -1,1 +1,1 @@
-yarn build && git add . && git commit -am "make it better" && git push heroku master && yarn apprun
+yarn build && git add . && git commit  && git push heroku master && yarn apprun
