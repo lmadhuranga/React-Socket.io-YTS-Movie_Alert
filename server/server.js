@@ -4,7 +4,7 @@ const app = express();
 const path    = require("path");
 // require('dotenv').config();
 
-console.log('process.env.SOCKETURL:',process.env)
+console.log('process.env.SOCKETURL:',process.env.SOCKETURL)
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
