@@ -39,6 +39,10 @@ app.get('/', function (req, res) {
     res.sendFile(htmlPath);
 })
 
+app.get('/live',(req, res)=>{
+    res.json({liveCount:liveCount});
+})
+
 app.get('/test', function (req, res) {
     let newList = latestMoviesObj.map((movie)=>{
         return {
