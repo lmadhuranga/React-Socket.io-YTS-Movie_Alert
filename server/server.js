@@ -40,6 +40,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/live',(req, res)=>{
+    console.info('liveCount',liveCount);
     res.json({liveCount:liveCount});
 })
 
