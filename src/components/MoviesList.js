@@ -66,18 +66,22 @@ class MoviesList extends Component {
        let youtubUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}`
       return  <ListItem key={movie.id} alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar alt={movie.title_long} src={movie.small_cover_image} />
+                  <Avatar sizes='100' alt={movie.title_long} src={movie.small_cover_image} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Brunch this weekend?"
+                  primary={
+                    <span>
+                      <a rel="noopener noreferrer" target="_blank" href={youtubUrl} >{movie.title_long}</a>&nbsp;|&nbsp;
+                      <a rel="noopener noreferrer" target="_blank" href={movie.url} >YTS Link</a>
+                    </span>
+                  }
                   secondary={
                     <React.Fragment>
                       <Typography component="span" className='MovieListItem' color="textPrimary">
-                        {movie.title_long} - {movie.rating}
+                        [ {movie.genres.join(' / ')} ]
                         {/* <i className="material-icons">play_circle_outline</i> */}
-                        <a rel="noopener noreferrer" target="_blank" href={youtubUrl} className="material-icons">play_circle_outline</a>
                       </Typography>
-                      [ {movie.genres.join(' / ')} ]
+                      Imb Ratings : {movie.rating}
                     </React.Fragment>
                   }
                 />
@@ -86,7 +90,7 @@ class MoviesList extends Component {
      })
     return (
       <div className="MovieListdv">
-         <h2>hello MovieLis2 ({this.state.liveCount})</h2>
+         <h2> YTS Latest 10 Movies ({this.state.liveCount})</h2>
          <List className="MovieListdv">
           {movieList}
          </List>
