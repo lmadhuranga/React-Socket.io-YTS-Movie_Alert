@@ -62,8 +62,6 @@ class MoviesList extends Component {
 
   
   render(props) {
-    console.log('pro',props);
-    // const { classes } = props;
      let movieList = this.state.movies.map((movie) =>{
        let youtubUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}`
       return  <ListItem key={movie.id} alignItems="flex-start">
