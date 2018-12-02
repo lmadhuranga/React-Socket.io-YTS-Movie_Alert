@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 require('dotenv').config()
-console.log('process.env.',process.env.socketUrl);
+console.log('process.env.',process.env.SOCKETURL);
 // const socketUrl = 'http://localhost:3001'
+
 const socketUrl = '/'
 
 class MoviesList extends Component {
