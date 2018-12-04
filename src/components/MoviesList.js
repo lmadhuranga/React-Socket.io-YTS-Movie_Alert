@@ -1,30 +1,35 @@
 import React, { Component } from 'react';
+import Paper from '@material-ui/core/Paper';
+
+import { withStyles } from '@material-ui/core/styles';
+
 import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
+import MovieItem  from './MovieItem';
 let socketUrl = process.env.NODE_ENV==='development'?'http://localhost:3001':'/';
+
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    flexGrow: 1,
+    overflow: 'hidden',
+    padding: `0 ${theme.spacing.unit * 3}px`,
   },
-  inline: {
-    display: 'inline',
+  paper: {
+    maxWidth: 400,
+    margin: `${theme.spacing.unit}px auto`,
+    padding: theme.spacing.unit * 2,
   },
 });
 
+// export default withStyles(styles)(MoviesList);
 class MoviesList extends Component {
   constructor(){
     super();
-    this.state = {movies: [], liveCount:0};
+    this.state = { 
+      movies: [], 
+      liveCount:0 
+    };
   }
 
   setup() {
@@ -59,43 +64,21 @@ class MoviesList extends Component {
   componentDidMount(props, satets) {
     setTimeout(this.setup.bind(this), 1000);
   }
-
   
-  render(props) {
-     let movieList = this.state.movies.map((movie) =>{
-       let youtubUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}`
-      return  <ListItem key={movie.id} alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar sizes='100' alt={movie.title_long} src={movie.small_cover_image} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <span>
-                      <a rel="noopener noreferrer" target="_blank" href={ movie.url } > { movie.title_long } </a>
-                      &nbsp;|&nbsp;
-                      <a rel="noopener noreferrer" target="_blank" href={ youtubUrl } ><i className="material-icons">play_circle_outline</i></a>
-                    </span>
-                  }
-                  secondary={
-                    <React.Fragment>
-                      <Typography component="span" className='MovieListItem' color="textPrimary">
-                        { movie.genres && `[ ${movie.genres.join(' / ')} ]` }
-                        {/* <i className="material-icons">play_circle_outline</i> */}
-                      </Typography>
-                      Imb Ratings : {movie.rating}
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-        // return <li key={movie.id}> <img alt={movie.title_long} src={movie.small_cover_image} /> {movie.title_long} - {movie.rating} {movie.genres.join()}</li>;
-     })
+  render() {
+    const { classes } = this.props;
+    let movieList = this.state.movies.map((movie) =>{
+      return(
+        <Paper key={ movie.id } className={classes.paper} xs={12}> 
+          <MovieItem key={ movie.id } movie={ movie }></MovieItem> 
+        </Paper>
+      );
+      // return <li key={movie.id}> <img alt={movie.title_long} src={movie.small_cover_image} /> {movie.title_long} - {movie.rating} {movie.genres.join()}</li>;
+    })
     return (
-      <div className="MovieListdv">
-         <h2> YTS Latest 10 Movies ({this.state.liveCount})</h2>
-         <List className="MovieListdv">
-          {movieList}
-         </List>
-      </div>
+      <Paper className={classes.root} > 
+          {movieList} 
+      </Paper>
     );
     
   }
