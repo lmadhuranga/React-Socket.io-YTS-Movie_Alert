@@ -64,7 +64,7 @@ class MoviesList extends Component {
   componentDidMount(props, satets) {
     setTimeout(this.setup.bind(this), 1000);
   }
-  
+
   render() {
     const { classes } = this.props;
     let movieList = this.state.movies.map((movie) =>{
@@ -77,6 +77,7 @@ class MoviesList extends Component {
     })
     return (
       <Paper className={classes.root} > 
+      <h1>Latest Movies ({this.state.liveCount})</h1>
           {movieList} 
       </Paper>
     );

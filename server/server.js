@@ -80,6 +80,7 @@ function joinedNewMember(userId){
     }
 }
 
+
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
 io.on("connection", socket => {
