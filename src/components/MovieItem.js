@@ -44,7 +44,7 @@ class MovieItem extends Component {
  
   render() {
     const { classes, movie } = this.props;
-    const youtubeUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}`
+    const youtubeUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}&vq=hd720`
      /* <li key={movie.id}>
       <img alt={movie.title_long} 
      src={movie.small_cover_image} /> 

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import {  appConfig  } from '../globel.conf'
 
 import { withStyles } from '@material-ui/core/styles';
 
 import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
 import MovieItem  from './MovieItem';
-let socketUrl = process.env.NODE_ENV==='development'?'http://localhost:3001':'/';
+let socketUrl = process.env.NODE_ENV==='development' ? appConfig.localHost :'/';
 
 
 const styles = theme => ({
