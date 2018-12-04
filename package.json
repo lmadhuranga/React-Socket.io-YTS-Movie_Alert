@@ -20,7 +20,7 @@
     "start": "node server/server.js",
     "serve": "nodemon server/server.js",
     "build": "react-scripts build",
-    "apprun": "react-scripts start - uses .env.development",
+    "cstart": "react-scripts start - uses .env.development",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

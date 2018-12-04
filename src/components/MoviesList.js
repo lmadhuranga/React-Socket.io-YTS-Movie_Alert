@@ -71,15 +71,15 @@ class MoviesList extends Component {
                 <ListItemText
                   primary={
                     <span>
-                      {movie.title_long}&nbsp;|&nbsp;
-                      <a rel="noopener noreferrer" target="_blank" href={youtubUrl} ><i className="material-icons">play_circle_outline</i></a>&nbsp;|&nbsp;
-                      <a rel="noopener noreferrer" target="_blank" href={movie.url} >YTS Link</a>
+                      <a rel="noopener noreferrer" target="_blank" href={ movie.url } > { movie.title_long } </a>
+                      &nbsp;|&nbsp;
+                      <a rel="noopener noreferrer" target="_blank" href={ youtubUrl } ><i className="material-icons">play_circle_outline</i></a>
                     </span>
                   }
                   secondary={
                     <React.Fragment>
                       <Typography component="span" className='MovieListItem' color="textPrimary">
-                        [ {movie.genres.join(' / ')} ]
+                        { movie.genres && `[ ${movie.genres.join(' / ')} ]` }
                         {/* <i className="material-icons">play_circle_outline</i> */}
                       </Typography>
                       Imb Ratings : {movie.rating}
