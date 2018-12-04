@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -77,7 +78,7 @@ class MoviesList extends Component {
     })
     return (
       <Paper className={classes.root} > 
-      <h1>Latest Movies ({this.state.liveCount})</h1>
+        <Grid item>  <h1>Latest Movies ({this.state.liveCount})</h1></Grid>
           {movieList} 
       </Paper>
     );

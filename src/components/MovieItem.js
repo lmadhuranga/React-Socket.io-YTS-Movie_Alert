@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -39,50 +38,10 @@ class MovieItem extends Component {
   constructor(){
     super();
     this.state = { 
-      movies: [], 
-      liveCount:0,
+        movie:{},
     };
   }
  
-
-  handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
-  }
-
-  setup() {
-    const socket = socketIOClient(socketUrl);
-    socket.on('connect', () => {
-      const socketId = socket.id;
-      socket.on(`init-${socketId}`, (data)=>{
-        // console.log('init called',data);
-        this.setState({ movies: data.latestMovies});
-      })
-    //   console.log('Client => Connected => Server ID=>', socket.id, socket);
-      socket.on("newmovies", (data) => {;
-        // this.setState({movies:[...this.state.movies,data.latestMovies]});
-        this.setState({ movies: data.latestMovies });
-      });
-      socket.on("liveCount", (data) => {;
-        this.setState({ liveCount:data.liveCount });
-      });
-    });
-    socket.on('disconnect', () => {
-      const socketId = socket.id;
-      socket.removeAllListeners("newmovies");
-      socket.removeAllListeners(`init-${socketId}`);
-      socket.removeAllListeners(`liveCount`);
-      socket.off(`ini t-${socketId}`)
-      socket.off("newmovies")
-      socket.off(`liveCount`)
-      console.log("Socket Disconnected");
-    });
-  }
-
-  componentDidMount() {
-    setTimeout(this.setup.bind(this), 1000);
-  }
-
-  
   render() {
     const { classes, movie } = this.props;
     const youtubeUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}`
