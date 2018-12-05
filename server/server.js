@@ -50,7 +50,6 @@ function serverCall(__callBack) {
     }
 } 
 
-
 function getYts(__callBack1){
     serverCall((jsonObj)=>{
         console.log('lastMovies',lastMovie, jsonObj.data.movies[0].title);
