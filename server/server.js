@@ -32,7 +32,7 @@ function checkLastUpdate() {
 
     const currtTime = new Date().getTime();
     diff = currtTime - lastUpdatedTime; 
-    if(diff>10000) {
+    if(diff>1800000) {
         // retuest
         console.log(' ok request else');
         lastUpdatedTime = new Date().getTime();
