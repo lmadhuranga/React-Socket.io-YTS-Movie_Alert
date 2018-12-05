@@ -17,6 +17,29 @@ const url = "https://yts.am/api/v2/list_movies.json?limit=20&sort_by=id&order_by
 let lastMovie = 'none';
 let latestMoviesObj = []
 let liveCount = 0;
+let lastUpdatedTime;
+
+
+function eligibitity() {
+    if(!lastUpdatedTime) {
+        // send request
+        console.log('reuset ok  no data previouse');
+        lastUpdatedTime = new Date().getTime();
+    }
+    else {
+        const currtTime = new Date().getTime();
+        diff = currtTime - lastUpdatedTime; 
+        if(diff>360000) {
+            // retuest
+            console.log(' ok request else');
+            lastUpdatedTime = new Date().getTime();
+        }
+        else {
+            console.log('not yet', diff);
+        }
+    }
+    
+}
 
 function getYts() {
     request.get(url, (error, response, body) => {
@@ -31,7 +54,7 @@ function getYts() {
     }); 
     
 }
-
+eligibitity();
 setInterval(getYts, 360000);
 
 app.get('/', function (req, res) {    
@@ -42,6 +65,7 @@ app.get('/', function (req, res) {
 app.get('/live',(req, res)=>{
     console.info('liveCount',liveCount);
     res.json({liveCount:liveCount});
+    eligibitity();
 })
 
 app.get('/test', function (req, res) {

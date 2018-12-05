@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import {  appConfig  } from '../globel.conf'
 
-import {createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import {createMuiTheme, withStyles } from '@material-ui/core/styles';
 
 import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
@@ -91,14 +90,12 @@ class MoviesList extends Component {
       // return <li key={movie.id}> <img alt={movie.title_long} src={movie.small_cover_image} /> {movie.title_long} - {movie.rating} {movie.genres.join()}</li>;
     })
     return (
-      <MuiThemeProvider theme={typographyV1Theme}>
-        <Paper className={classes.root} > 
-          <Typography align={'center'} component="h2" variant="display2" gutterBottom>
-            YTS Latest Movies ({this.state.liveCount})
-          </Typography>
-          { movieList } 
-        </Paper>
-      </MuiThemeProvider>
+      <Paper className={classes.root} > 
+        <Typography align={'center'} component="h2" variant="display2" gutterBottom>
+          YTS Latest Movies ({this.state.liveCount})
+        </Typography>
+        { movieList } 
+      </Paper>
     );
     
   }

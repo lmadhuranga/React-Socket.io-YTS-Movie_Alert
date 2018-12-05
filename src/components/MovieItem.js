@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
+import MovieName from './MovieName';
+import TorrentLinks from './TorrentLinks';
+import YoutubeLink from './YoutubeLink';
+import Subtitle from './Subtitle';
+import ImdbLink from './ImdbLink';
 
-import {  appConfig as _config } from '../globel.conf'
+// import {  appConfig as _config } from '../globel.conf'
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 
@@ -45,13 +49,6 @@ class MovieItem extends Component {
  
   render() {
     const { classes, movie } = this.props;
-    const youtubeUrl = `https://www.youtube.com/watch?v=${movie.yt_trailer_code}&vq=hd720`
-     /* <li key={movie.id}>
-      <img alt={movie.title_long} 
-     src={movie.small_cover_image} /> 
-     {movie.title_long} -
-      {movie.rating} 
-     {movie.genres.join()}</li>; */
     return (
         <Grid container wrap="nowrap" spacing={16}>
             <Grid item>
@@ -63,7 +60,7 @@ class MovieItem extends Component {
                 <Grid item xs container direction="column" spacing={16}>
                     <Grid item xs>
                         <Typography gutterBottom variant="subtitle1">
-                            <a target="_blank" href={ movie.url } title={movie.title}> {movie.title}</a> { movie.year }
+                            <MovieName movie={movie}></MovieName>
                         </Typography>
                         { movie.genres && <Typography gutterBottom>[ { movie.genres && movie.genres.join(' / ') } ]</Typography> }
                         <Typography color="textSecondary">10 / { movie.rating } - { movie.language }</Typography>
@@ -71,7 +68,10 @@ class MovieItem extends Component {
                     </Grid>
                     <Grid item>
                         <Typography style={{ cursor: 'pointer' }}>
-                            <a target="_blank" href={ youtubeUrl } title={movie.title_long}> Trailer </a>
+                            <YoutubeLink yt_code={ movie.yt_trailer_code }></YoutubeLink>
+                            <TorrentLinks torrents={ movie.torrents } ></TorrentLinks>
+                            <ImdbLink code={ movie.imdb_code } ></ImdbLink>
+                            <Subtitle title={ movie.title_long } ></Subtitle>
                         </Typography>
                     </Grid>
                 </Grid>
@@ -88,6 +88,7 @@ class MovieItem extends Component {
 // MovieItem.propTypes = {
 //   classes: PropTypes.object.isRequired,
 // };
+     /* <li key={movie.id}> <img alt={movie.title_long}  src={movie.small_cover_image} />  {movie.title_long} - {movie.rating}  {movie.genres.join()}</li>; */
 
 
 export default withStyles(styles)(MovieItem);
