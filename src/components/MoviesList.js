@@ -3,16 +3,28 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {  appConfig  } from '../globel.conf'
 
-import { withStyles } from '@material-ui/core/styles';
+import {createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
 import MovieItem  from './MovieItem';
+import { Typography } from '@material-ui/core';
 let socketUrl = process.env.NODE_ENV==='development' ? appConfig.localHost :'/';
 
 
+function typographyV1Theme(theme) {
+  return createMuiTheme({
+    ...theme,
+    typography: {
+      useNextVariants: false,
+    },
+  });
+}
+
 const styles = theme => ({
   root: {
+    width: '100%',
+    // maxWidth: 500,
     flexGrow: 1,
     overflow: 'hidden',
     padding: `0 ${theme.spacing.unit * 3}px`,
@@ -68,6 +80,7 @@ class MoviesList extends Component {
   }
 
   render() {
+    
     const { classes } = this.props;
     let movieList = this.state.movies.map((movie) =>{
       return(
@@ -78,10 +91,14 @@ class MoviesList extends Component {
       // return <li key={movie.id}> <img alt={movie.title_long} src={movie.small_cover_image} /> {movie.title_long} - {movie.rating} {movie.genres.join()}</li>;
     })
     return (
-      <Paper className={classes.root} > 
-        <Grid item>  <h1>Latest Movies ({this.state.liveCount})</h1></Grid>
-          {movieList} 
-      </Paper>
+      <MuiThemeProvider theme={typographyV1Theme}>
+        <Paper className={classes.root} > 
+          <Typography align={'center'} component="h2" variant="display2" gutterBottom>
+            YTS Latest Movies ({this.state.liveCount})
+          </Typography>
+          { movieList } 
+        </Paper>
+      </MuiThemeProvider>
     );
     
   }
@@ -90,6 +107,5 @@ class MoviesList extends Component {
 MoviesList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles)(MoviesList);

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import {  appConfig as _config } from '../globel.conf'
+
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -11,7 +13,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 const MIN = 0;
 const MAX = 10;
 const normalise = value => (value - MIN) * 100 / (MAX - MIN);
-const socketUrl = process.env.NODE_ENV==='development'?'http://localhost:3001':'/';
 
 const styles = theme => ({
   root: {

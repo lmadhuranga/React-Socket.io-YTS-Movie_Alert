@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/../build'))); 
 const request = require("request");
-const url = "https://yts.am/api/v2/list_movies.json?limit=10&sort_by=id&order_by=desc"; 
+const url = "https://yts.am/api/v2/list_movies.json?limit=20&sort_by=id&order_by=desc"; 
 let lastMovie = 'none';
 let latestMoviesObj = []
 let liveCount = 0;
