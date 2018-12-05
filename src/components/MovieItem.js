@@ -28,7 +28,7 @@ const styles = theme => ({
     maxWidth: 500,
   },
   image: {
-    width: 128,
+    width: 100,
     height: 128,
   },
   img: {
