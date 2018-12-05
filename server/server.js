@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const path    = require("path");
+const subscribe = require('rxjs')
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -20,30 +22,37 @@ let liveCount = 0;
 let lastUpdatedTime;
 
 
-function eligibitity() {
+function checkLastUpdate() {
     if(!lastUpdatedTime) {
         // send request
-        console.log('reuset ok  no data previouse');
+        // console.log('reuset ok  no data previouse');
         lastUpdatedTime = new Date().getTime();
+        return true;
     }
-    else {
-        const currtTime = new Date().getTime();
-        diff = currtTime - lastUpdatedTime; 
-        if(diff>360000) {
-            // retuest
-            console.log(' ok request else');
-            lastUpdatedTime = new Date().getTime();
-        }
-        else {
-            console.log('not yet', diff);
-        }
+
+    const currtTime = new Date().getTime();
+    diff = currtTime - lastUpdatedTime; 
+    if(diff>10000) {
+        // retuest
+        console.log(' ok request else');
+        lastUpdatedTime = new Date().getTime();
+        return true;
     }
-    
+    console.log('not yet', diff);
+    return false
 }
 
-function getYts() {
-    request.get(url, (error, response, body) => {
-        let jsonObj = JSON.parse(body);
+function serverCall(__callBack) {
+    if(checkLastUpdate()){
+        return request.get(url, (error, response, body) => {
+            __callBack(JSON.parse(body));
+        });    
+    }
+} 
+
+
+function getYts(__callBack1){
+    serverCall((jsonObj)=>{
         console.log('lastMovies',lastMovie, jsonObj.data.movies[0].title);
         if(lastMovie!=jsonObj.data.movies[0].title){
             latestMoviesObj = jsonObj.data.movies;
@@ -51,11 +60,15 @@ function getYts() {
             io.emit('newmovies',  {latestMovies:jsonObj.data.movies});
             updateLiveCount();
         }
-    }); 
-    
+        __callBack1(true);
+    })
 }
-eligibitity();
-setInterval(getYts, 360000);
+
+setInterval(()=>{
+    getYts((res)=>{
+        console.log('1 Timer called now ->', new Date());
+    })
+}, 360000);
 
 app.get('/', function (req, res) {    
     const htmlPath = path.join(__dirname+'/build/index.html')
@@ -63,9 +76,10 @@ app.get('/', function (req, res) {
 })
 
 app.get('/live',(req, res)=>{
-    console.info('liveCount',liveCount);
-    res.json({liveCount:liveCount});
-    eligibitity();
+    getYts(()=>{
+        console.info('liveCount',liveCount);
+        res.json({liveCount:liveCount});
+    })
 })
 
 app.get('/test', function (req, res) {
@@ -93,12 +107,9 @@ function joinedNewMember(userId){
     liveCount++;
     updateLiveCount();
     if (lastMovie=='none') {
-        request.get(url, (error, response, body) => {
-            let jsonObj = JSON.parse(body); 
-            latestMoviesObj = jsonObj.data.movies;
-            lastMovie = jsonObj.data.movies[0].title;
-            io.emit(`init-${userId}`,  {latestMovies:jsonObj.data.movies})
-        }); 
+        getYts(()=>{
+            io.emit(`init-${userId}`,  {latestMovies:latestMoviesObj});
+        });        
     } else {
         io.emit(`init-${userId}`,  {latestMovies:latestMoviesObj})
     }
