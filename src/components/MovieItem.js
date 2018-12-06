@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import MovieName from './MovieName';
 import TorrentLinks from './TorrentLinks';
 import YoutubeLink from './YoutubeLink';
-import Subtitle from './Subtitle';
+import SubtitleLink from './SubtitleLink';
 import ImdbLink from './ImdbLink';
 
 // import {  appConfig as _config } from '../globel.conf'
@@ -71,7 +71,7 @@ class MovieItem extends Component {
                             <YoutubeLink yt_code={ movie.yt_trailer_code }></YoutubeLink>
                             { movie.torrents && <TorrentLinks torrents={ movie.torrents } ></TorrentLinks> }
                             <ImdbLink code={ movie.imdb_code } ></ImdbLink>
-                            <Subtitle title={ movie.title_long } ></Subtitle>
+                            <SubtitleLink title={ movie.title_long } ></SubtitleLink>
                         </Typography>
                     </Grid>
                 </Grid>
