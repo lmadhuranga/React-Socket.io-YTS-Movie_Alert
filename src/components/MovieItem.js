@@ -69,7 +69,7 @@ class MovieItem extends Component {
                     <Grid item>
                         <Typography style={{ cursor: 'pointer' }}>
                             <YoutubeLink yt_code={ movie.yt_trailer_code }></YoutubeLink>
-                            <TorrentLinks torrents={ movie.torrents } ></TorrentLinks>
+                            { movie.torrents && <TorrentLinks torrents={ movie.torrents } ></TorrentLinks> }
                             <ImdbLink code={ movie.imdb_code } ></ImdbLink>
                             <Subtitle title={ movie.title_long } ></Subtitle>
                         </Typography>

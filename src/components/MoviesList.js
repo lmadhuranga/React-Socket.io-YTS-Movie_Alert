@@ -2,23 +2,13 @@ import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {  appConfig  } from '../globel.conf'
 
-import {createMuiTheme, withStyles } from '@material-ui/core/styles';
+import {withStyles } from '@material-ui/core/styles';
 
 import socketIOClient from "socket.io-client";
 import PropTypes from 'prop-types';
 import MovieItem  from './MovieItem';
 import { Typography } from '@material-ui/core';
 let socketUrl = process.env.NODE_ENV==='development' ? appConfig.localHost :'/';
-
-
-function typographyV1Theme(theme) {
-  return createMuiTheme({
-    ...theme,
-    typography: {
-      useNextVariants: false,
-    },
-  });
-}
 
 const styles = theme => ({
   root: {
