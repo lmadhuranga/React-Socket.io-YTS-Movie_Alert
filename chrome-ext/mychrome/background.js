@@ -1,7 +1,7 @@
 "use strict";
 var config = {
-  // socketHost  : "https://movies-lovers.herokuapp.com",
-  socketHost  : "http://localhost:3001",
+  socketHost  : "https://movies-lovers.herokuapp.com",
+  // socketHost  : "http://localhost:3001",
   badgeColor  : '#FF0000',
   movieUrl    : "https://yts.am/movie",
   youtubeUrl  : "https://www.youtube.com/watch?v="

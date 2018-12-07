@@ -71,7 +71,6 @@ function _isUrlActive(index, url, __callBack) {
     return request.get(url, (error, response, body) => {
         const status = (response && response.statusCode==200);
         __callBack(status, response.statusCode, index, url);
-        return;
     });
 }
 
@@ -91,7 +90,7 @@ function checkBrockenLinks() {
 }
 
 app.get('/check', function (req, res) {
-    
+    checkBrockenLinks();
     res.send('done')
 })
 
