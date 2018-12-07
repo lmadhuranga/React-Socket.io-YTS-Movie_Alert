@@ -1,0 +1,11 @@
+{
+    "app": {
+        "title" : "App Title"
+    },
+    "remoteHost": {
+        "url" : "https://movies-lovers.herokuapp.com"
+    },
+    "system": {
+        "notSmallCover": "static/img/no.jpg"
+    }
+}

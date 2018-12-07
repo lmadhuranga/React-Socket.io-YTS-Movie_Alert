@@ -1,14 +1,15 @@
+"use strict";
 var config = {
+  // socketHost  : "https://movies-lovers.herokuapp.com",
   socketHost  : "http://localhost:3001",
   badgeColor  : '#FF0000',
   movieUrl    : "https://yts.am/movie",
-  youtubeUrl    : "https://www.youtube.com/watch?v="
+  youtubeUrl  : "https://www.youtube.com/watch?v="
 }
 var socket = io.connect(config.socketHost);
 
 // Conditionally initialize the options.
 if (!localStorage.isInitialized) {
-  console.log('initial start');
   localStorage.isActivated = true;   // The display activation.
   localStorage.frequency = 1;        // The display frequency, in minutes.
   localStorage.isInitialized = true; // The option initialization.
@@ -26,38 +27,52 @@ function showNotifications(movies) {
       let genres = movie.genres ? `[${movie.genres.join(' / ')}]`: '';
       return { title:movie.title_long, message:`10/${movie.rating} ${genres} ${movie.language}` };
     });
-    chrome.notifications.create(`movie.title_long `, {
-      type: "list",
-      title: "Latest Movies List",
-      message: "Just Arive to site",
-      iconUrl: "48.png",
-      items: moviesList
-    });
+
+    try {
+      console.log('try');
+      chrome.notifications.create(`movie.title_long `, {
+        type: "list",
+        title: "Latest Movies List",
+        message: "Just Arive to site",
+        iconUrl: "48.png",
+        items: moviesList
+      });
+      
+    } catch (error) {
+      console.log('catch', error);
+    }
 
   } else {
     // Create Single notification 
     movies.forEach((movie, movieIndex) => {
       let genres = movie.genres ? `[${movie.genres.join(' / ')}]`: '';
       // Create the description 
-      chrome.notifications.create(`${movieIndex}`, {
-        type: "basic",
-        title: movie.title_long +'ss' ,
-        message: `10/${movie.rating} ${genres} ${movie.language}`,
-        iconUrl: movie.small_cover_image,
-        buttons: [
-          {title: 'Youtube'},
-        ],
-        priority: 0
-      });
+      try {
+        console.log('try');
+        chrome.notifications.create(`${movieIndex}`, {
+          type: "basic",
+          title: movie.title_long,
+          message: `10/${movie.rating} ${genres} ${movie.language}`,
+          // iconUrl: movie.small_cover_image,
+          iconUrl: '48.png',
+          buttons: [
+            {title: 'Youtube'},
+          ],
+          priority: 0
+        });
+
+      } catch (error) {
+        console.log('error',error);
+      }
     });
 
     // When notificatin click redirect to Yts page
     chrome.notifications.onClicked.addListener((movieIndex) => {
       let toUrl = `${config.movieUrl}/${movies[movieIndex].slug}`;
-      chrome.tabs.create({url:toUrl});
+      // chrome({url:toUrl});
     });
     // when youtube click got youtube trailre
-    chrome.notifications.onButtonClicked.addListener((movieIndex, btnIndex) => {
+    chrome.notifications.onButtonClicked.addListener((movieIndex, btnIndex) => {  
       let youtubeUrl = `${config.youtubeUrl}${movies[movieIndex].yt_trailer_code}`;
       chrome.tabs.create({url:youtubeUrl});
     });

@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const path    = require("path");
 const subscribe = require('rxjs')
-
+const appConfig = require('./appConfig.json'); 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+console.log('process.env',process.env);
 
 const port = process.env.PORT || 3001;
 // // support parsing of application/json type post data
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/../build'))); 
+// app.use(express.static('../public/img'))
 const request = require("request");
 const url = "https://yts.am/api/v2/list_movies.json?limit=20&sort_by=id&order_by=desc"; 
 let lastMovie = 'none';
@@ -64,6 +66,24 @@ function getYts(__callBack1){
     })
 }
 
+function checkEachUrl(index, url, __callBack) {
+    return request.get(url, (error, response, body) => {
+        const valid = (response && response.statusCode==200);
+        __callBack(valid, index, url);
+        return;
+    });
+}
+  
+
+app.get('/check', function (req, res) {
+    latestMoviesObj.forEach((movie, index) => {        
+        checkEachUrl(index, movie.small_cover_image, (response, index, url)=> {
+            latestMoviesObj[index].small_cover_image = appConfig.system.notSmallCover;
+        });
+    });
+    res.send('done')
+})
+
 setInterval(()=>{
     getYts((res)=>{
         console.log('1 Timer called now ->', new Date());
@@ -103,7 +123,7 @@ function updateLiveCount(){
 }
 
 function getNewUserMovies(){
-    return latestMoviesObj.slice(0, 4);
+    return latestMoviesObj.slice(0, 5);
 }
 
 function joinedNewMember(userId){    
