@@ -20,6 +20,7 @@ let lastMovie = 'none';
 let latestMoviesObj = []
 let liveCount = 0;
 let lastUpdatedTime;
+let newUserMovies;
 
 
 function checkLastUpdate() {
@@ -88,36 +89,41 @@ app.get('/test', function (req, res) {
             title:movie.title
         }
     });
-    io.emit('newmovies',  { latestMovies:latestMoviesObj })
-    res.json({latestMovies:newList});
+    io.emit('newmovies',  { latestMovies:getNewUserMovies() })
+    res.json({latestMovies:getNewUserMovies()});
     updateLiveCount();
-})
-
+});
 
 const server = app.listen(port,()=>{
     console.log('start server',port);
-})
+});
 
 function updateLiveCount(){
-    io.emit('liveCount',  { liveCount:liveCount })
+    io.emit('liveCount',  { liveCount:liveCount });
 }
 
-function joinedNewMember(userId){
+function getNewUserMovies(){
+    return latestMoviesObj.slice(0, 4);
+}
+
+function joinedNewMember(userId){    
     liveCount++;
     updateLiveCount();
     if (lastMovie=='none') {
         getYts(()=>{
-            io.emit(`init-${userId}`,  {latestMovies:latestMoviesObj});
-        });        
-    } else {
-        io.emit(`init-${userId}`,  {latestMovies:latestMoviesObj})
+            io.emit(`init-${userId}`,  {latestMovies:getNewUserMovies()});
+        });
+        return;        
     }
+    io.emit(`init-${userId}`,  {latestMovies:getNewUserMovies()});
+    return;
 }
 
 
 const io = require('socket.io').listen(server);
 //Establishes socket connection.
 io.on("connection", socket => {
+    console.log('New Clinet',socket.client.id);
     joinedNewMember(socket.client.id);
     socket.on("disconnect", () => {
         liveCount--;

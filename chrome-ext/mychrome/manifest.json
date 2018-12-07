@@ -1,0 +1,28 @@
+{
+  "name": "Chrome",
+  "version": "1.1",
+  "description":
+    "display nitification ",
+  "icons": {"16": "16.png", "48": "48.png", "128": "128.png"},
+  "permissions": [
+    "notifications",
+    "http://*/",
+    "http://*/*",
+    "https://*/",
+    "https://*/*"
+    ],
+    
+    "background": {
+    "page": "background.html"
+    },
+    "browser_action": {
+      "default_title": "Drink Water Event",
+      "default_popup": "popup.html"
+    },
+  "options_page": "options.html", 
+  "manifest_version": 2,  
+
+  "web_accessible_resources": [
+    "48.png"
+  ]
+}
