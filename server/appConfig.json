@@ -16,7 +16,8 @@
         "url" : "https://movies-lovers.herokuapp.com"
     },
     "local": {
-        "url" : "http://localhost:3001"
+        "frontUrl" : "http://localhost:3000",
+        "apiUrl" : "http://localhost:3001"
     },
     "system": {
         "notSmallCover": "img/no.jpg"

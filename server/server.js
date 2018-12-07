@@ -60,7 +60,7 @@ function getYts(__callBack1){
             lastMovie = jsonObj.data.movies[0].title;
             socketClRrefreLiveCount();
             checkBrockenLinks();
-            setTimeout(() => socketClNewMovie(latestMoviesObj), 5000);
+            socketClNewMovie(latestMoviesObj);
         }
         __callBack1(true);
     })
@@ -77,9 +77,10 @@ function checkBrockenLinks() {
     latestMoviesObj.forEach((movie, index) => {        
         _isUrlActive(index, movie.small_cover_image, (status, code, index, url)=> {
             if(!status){
-                const hostUrl = _isProduction ? appConfig.remote.url:appConfig.local.url;
+                const hostUrl = _isProduction ? appConfig.remote.url:appConfig.local.frontUrl;
                 const newUrl = `${hostUrl}/${appConfig.system.notSmallCover}`;
                 latestMoviesObj[index].small_cover_image = newUrl;
+                latestMoviesObj[index].medium_cover_image = newUrl;
                 console.log('Broken link', status, code, url, newUrl);
             }            
         });
@@ -161,14 +162,20 @@ io.on("connection", socket => {
     });
 });
 
+const socketDelay = 5000;
 function socketClNewMovie(movies) {
-    io.emit('newmovies',  {latestMovies:movies});
+    setTimeout(() => {
+        io.emit('newmovies',  {latestMovies:movies});
+    }, socketDelay);
 }
 
 function socketClInitCall(userId, movies){
+    console.log('socketClInitCall :');
     io.emit(`init-${userId}`,  {latestMovies: movies});
 }
 
+
 function socketClRrefreLiveCount(){
+    console.log('socketClRrefreLiveCount :');
     io.emit('liveCount',  { liveCount:liveCount });
 }
