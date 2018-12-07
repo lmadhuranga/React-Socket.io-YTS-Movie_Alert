@@ -22,7 +22,6 @@ let lastMovie = 'none';
 let latestMoviesObj = []
 let liveCount = 0;
 let lastUpdatedTime;
-let newUserMovies;
 
 
 function checkLastUpdate() {
@@ -59,9 +58,9 @@ function getYts(__callBack1){
         if(lastMovie!=jsonObj.data.movies[0].title){
             latestMoviesObj = jsonObj.data.movies;
             lastMovie = jsonObj.data.movies[0].title;
-            updateLiveCount();
+            socketClRrefreLiveCount();
             checkBrockenLinks();
-            setTimeout(socketClNewMovie, 5000);
+            setTimeout(() => socketClNewMovie(latestMoviesObj), 5000);
         }
         __callBack1(true);
     })
@@ -75,15 +74,13 @@ function _isUrlActive(index, url, __callBack) {
 }
 
 function checkBrockenLinks() {
-    console.log('ENV _isProduction',_isProduction);
-    console.log('ENV process.env.NODE_ENV',process.env.NODE_ENV);
     latestMoviesObj.forEach((movie, index) => {        
         _isUrlActive(index, movie.small_cover_image, (status, code, index, url)=> {
             if(!status){
                 const hostUrl = _isProduction ? appConfig.remote.url:appConfig.local.url;
                 const newUrl = `${hostUrl}/${appConfig.system.notSmallCover}`;
                 latestMoviesObj[index].small_cover_image = newUrl;
-                console.log('index',status, code, url, newUrl);
+                console.log('Broken link', status, code, url, newUrl);
             }            
         });
     });
@@ -122,16 +119,13 @@ app.get('/test', function (req, res) {
     });
     io.emit('newmovies',  { latestMovies:getNewUserMovies() })
     res.json({latestMovies:getNewUserMovies()});
-    updateLiveCount();
+    socketClRrefreLiveCount();
 });
 
 const server = app.listen(port,()=>{
     console.log('start server',port);
 });
 
-function updateLiveCount(){
-    io.emit('liveCount',  { liveCount:liveCount });
-}
 
 function getNewUserMovies(){
     return latestMoviesObj.slice(0, 5);
@@ -139,14 +133,14 @@ function getNewUserMovies(){
 
 function joinedNewMember(userId){    
     liveCount++;
-    updateLiveCount();
+    socketClRrefreLiveCount();
     if (lastMovie=='none') {
         getYts(()=>{
-            io.emit(`init-${userId}`,  {latestMovies:getNewUserMovies()});
+            socketClInitCall(userId, getNewUserMovies());
         });
         return;        
     }
-    io.emit(`init-${userId}`,  {latestMovies:getNewUserMovies()});
+    socketClInitCall(userId, getNewUserMovies());
     return;
 }
 
@@ -162,11 +156,19 @@ io.on("connection", socket => {
         {
             liveCount = 0;
         }
-        updateLiveCount();
+        socketClRrefreLiveCount();
         console.info("Client disconnected Live -> ", liveCount)
     });
 });
 
-function socketClNewMovie() {
-    io.emit('newmovies',  {latestMovies:latestMoviesObj});
+function socketClNewMovie(movies) {
+    io.emit('newmovies',  {latestMovies:movies});
+}
+
+function socketClInitCall(userId, movies){
+    io.emit(`init-${userId}`,  {latestMovies: movies});
+}
+
+function socketClRrefreLiveCount(){
+    io.emit('liveCount',  { liveCount:liveCount });
 }
