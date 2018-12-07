@@ -118,8 +118,8 @@ app.get('/test', function (req, res) {
             title:movie.title
         }
     });
-    io.emit('newmovies',  { latestMovies:getNewUserMovies() })
-    res.json({latestMovies:getNewUserMovies()});
+    socketClNewMovie()
+    res.json({latestMovies:newList});
     socketClRrefreLiveCount();
 });
 
@@ -163,13 +163,19 @@ io.on("connection", socket => {
 });
 
 const socketDelay = 5000;
-function socketClNewMovie(movies) {
+function socketClNewMovie(movies=null) {
+    if(!movies) {
+        movies = latestMoviesObj;
+    }
     setTimeout(() => {
         io.emit('newmovies',  {latestMovies:movies});
     }, socketDelay);
 }
 
-function socketClInitCall(userId, movies){
+function socketClInitCall(userId, movies=null){
+    if(!movies) {
+        movies = latestMoviesObj;
+    }
     console.log('socketClInitCall :');
     io.emit(`init-${userId}`,  {latestMovies: movies});
 }
