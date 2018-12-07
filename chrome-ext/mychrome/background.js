@@ -28,42 +28,29 @@ function showNotifications(movies) {
       return { title:movie.title_long, message:`10/${movie.rating} ${genres} ${movie.language}` };
     });
 
-    try {
-      console.log('try');
-      chrome.notifications.create(`movie.title_long `, {
-        type: "list",
-        title: "Latest Movies List",
-        message: "Just Arive to site",
-        iconUrl: "48.png",
-        items: moviesList
-      });
-      
-    } catch (error) {
-      console.log('catch', error);
-    }
+    chrome.notifications.create(`movie.title_long `, {
+      type: "list",
+      title: "Latest Movies List",
+      message: "Just Arive to site",
+      iconUrl: "48.png",
+      items: moviesList
+    });
 
   } else {
     // Create Single notification 
     movies.forEach((movie, movieIndex) => {
       let genres = movie.genres ? `[${movie.genres.join(' / ')}]`: '';
-      // Create the description 
-      try {
-        console.log('try');
-        chrome.notifications.create(`${movieIndex}`, {
-          type: "basic",
-          title: movie.title_long,
-          message: `10/${movie.rating} ${genres} ${movie.language}`,
-          // iconUrl: movie.small_cover_image,
-          iconUrl: '48.png',
-          buttons: [
-            {title: 'Youtube'},
-          ],
-          priority: 0
-        });
-
-      } catch (error) {
-        console.log('error',error);
-      }
+      chrome.notifications.create(`${movieIndex}`, {
+        type: "basic",
+        title: movie.title_long,
+        message: `10/${movie.rating} ${genres} ${movie.language}`,
+        iconUrl: movie.small_cover_image,
+        // iconUrl: '48.png',
+        buttons: [
+          {title: 'Youtube'},
+        ],
+        priority: 0
+      });
     });
 
     // When notificatin click redirect to Yts page

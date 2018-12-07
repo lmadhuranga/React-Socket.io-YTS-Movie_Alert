@@ -2,6 +2,16 @@
     "app": {
         "title" : "App Title"
     },
+    "yts": {        
+        "api": {
+            "params": {
+                "limit": 20,
+                "sort_by": "id",
+                "order_by": "desc"
+            },
+            "movies_get": "https://yts.am/api/v2/list_movies.json"
+        }
+    },
     "remote": {
         "url" : "https://movies-lovers.herokuapp.com"
     },
@@ -9,6 +19,6 @@
         "url" : "http://localhost:3001"
     },
     "system": {
-        "notSmallCover": "static/img/no.jpg"
+        "notSmallCover": "img/no.jpg"
     }
 }

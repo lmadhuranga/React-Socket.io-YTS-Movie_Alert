@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/../build'))); 
 // app.use(express.static('../public/img'))
 const request = require("request");
-const url = "https://yts.am/api/v2/list_movies.json?limit=20&sort_by=id&order_by=desc"; 
+const ytsUrl = `${appConfig.yts.api.movies_get}?limit=${appConfig.yts.api.params.limit}&sort_by=${appConfig.yts.api.params.sort_by}&order_by=${appConfig.yts.api.params.order_by}`;
 let lastMovie = 'none';
 let latestMoviesObj = []
 let liveCount = 0;
@@ -47,7 +47,7 @@ function checkLastUpdate() {
 
 function serverCall(__callBack) {
     if(checkLastUpdate()){
-        return request.get(url, (error, response, body) => {
+        return request.get(ytsUrl, (error, response, body) => {
             __callBack(JSON.parse(body));
         });    
     }
@@ -59,8 +59,9 @@ function getYts(__callBack1){
         if(lastMovie!=jsonObj.data.movies[0].title){
             latestMoviesObj = jsonObj.data.movies;
             lastMovie = jsonObj.data.movies[0].title;
-            io.emit('newmovies',  {latestMovies:jsonObj.data.movies});
             updateLiveCount();
+            checkBrockenLinks();
+            setTimeout(socketClNewMovie, 5000);
         }
         __callBack1(true);
     })
@@ -73,9 +74,8 @@ function _isUrlActive(index, url, __callBack) {
         return;
     });
 }
-  
 
-app.get('/check', function (req, res) {
+function checkBrockenLinks() {
     console.log('ENV _isProduction',_isProduction);
     console.log('ENV process.env.NODE_ENV',process.env.NODE_ENV);
     latestMoviesObj.forEach((movie, index) => {        
@@ -88,6 +88,10 @@ app.get('/check', function (req, res) {
             }            
         });
     });
+}
+
+app.get('/check', function (req, res) {
+    
     res.send('done')
 })
 
@@ -163,3 +167,7 @@ io.on("connection", socket => {
         console.info("Client disconnected Live -> ", liveCount)
     });
 });
+
+function socketClNewMovie() {
+    io.emit('newmovies',  {latestMovies:latestMoviesObj});
+}
