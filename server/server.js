@@ -4,9 +4,9 @@ const app = express();
 const path    = require("path");
 const subscribe = require('rxjs')
 const appConfig = require('./appConfig.json'); 
+const _isProduction = process.env.NODE_ENV && process.env.NODE_ENV;
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-console.log('process.env',process.env);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; 
 
 const port = process.env.PORT || 3001;
 // // support parsing of application/json type post data
@@ -66,19 +66,26 @@ function getYts(__callBack1){
     })
 }
 
-function checkEachUrl(index, url, __callBack) {
+function _isUrlActive(index, url, __callBack) {
     return request.get(url, (error, response, body) => {
-        const valid = (response && response.statusCode==200);
-        __callBack(valid, index, url);
+        const status = (response && response.statusCode==200);
+        __callBack(status, response.statusCode, index, url);
         return;
     });
 }
   
 
 app.get('/check', function (req, res) {
+    console.log('ENV _isProduction',_isProduction);
+    console.log('ENV process.env.NODE_ENV',process.env.NODE_ENV);
     latestMoviesObj.forEach((movie, index) => {        
-        checkEachUrl(index, movie.small_cover_image, (response, index, url)=> {
-            latestMoviesObj[index].small_cover_image = appConfig.system.notSmallCover;
+        _isUrlActive(index, movie.small_cover_image, (status, code, index, url)=> {
+            if(!status){
+                const hostUrl = _isProduction ? appConfig.remote.url:appConfig.local.url;
+                const newUrl = `${hostUrl}/${appConfig.system.notSmallCover}`;
+                latestMoviesObj[index].small_cover_image = newUrl;
+                console.log('index',status, code, url, newUrl);
+            }            
         });
     });
     res.send('done')
@@ -96,6 +103,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/live',(req, res)=>{
+    console.log('process.env',process.env);
     getYts(()=>{
         console.info('liveCount',liveCount);
         res.json({liveCount:liveCount});

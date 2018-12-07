@@ -2,8 +2,11 @@
     "app": {
         "title" : "App Title"
     },
-    "remoteHost": {
+    "remote": {
         "url" : "https://movies-lovers.herokuapp.com"
+    },
+    "local": {
+        "url" : "http://localhost:3001"
     },
     "system": {
         "notSmallCover": "static/img/no.jpg"
