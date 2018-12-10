@@ -129,7 +129,7 @@ const server = app.listen(port,()=>{
 
 
 function getNewUserMovies(){
-    return latestMoviesObj.slice(0, 5);
+    return latestMoviesObj.slice(0, 20);
 }
 
 function joinedNewMember(userId){    
