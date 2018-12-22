@@ -70,7 +70,7 @@ function showNotifications(movies) {
 socket.on('connect', () => {
   const userId = socket.id;
   socket.on(`init-${userId}`, (data)=>{
-    let movies = data.latestMovies;
+    let movies = data.latestMovies.slice(0, 5);
     console.log('movies',movies);
     // Show the notification 
     showNotifications(movies);
@@ -78,7 +78,7 @@ socket.on('connect', () => {
   
   // When new movie released dispaly
   socket.on("newmovies", (data) => {
-    movies = data.latestMovies;
+    let movies = data.latestMovies;
     console.log('movie',movies);
     showNotifications(movies);    
   });
